@@ -5,17 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6dc3f219-d15a-4cf1-8677-b0e7348a704a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Pizzaria.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/main,py.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/logging_config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/windows/main_window.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/teste_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/main,py.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
