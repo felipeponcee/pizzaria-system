@@ -4,8 +4,9 @@ from tkinter import messagebox
 
 import customtkinter as ctk
 
-from src.core.database import init_db
+from src.core.database import init_db, session_scope
 from src.core.logging_config import setup_logging
+from src.services.catalog_service import ensure_default_categories
 from src.ui.windows.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
@@ -16,6 +17,8 @@ def main() -> None:
     logger.info("Aplicação iniciada")
     try:
         init_db()
+        with session_scope() as session:
+            ensure_default_categories(session)
     except Exception:
         logger.exception("Falha ao inicializar o banco de dados")
         messagebox.showerror(
