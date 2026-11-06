@@ -57,3 +57,9 @@ FONT_FAMILY = "Segoe UI"
 def font(size: int = 14, weight: str = "normal") -> ctk.CTkFont:
     """Cria uma fonte padrão. Só chamar depois que a janela principal existir."""
     return ctk.CTkFont(family=FONT_FAMILY, size=size, weight=weight)
+
+# Botões secundários e tabelas
+SECONDARY_BG = ("#E5E7EB", "#334155")
+SECONDARY_HOVER = ("#D1D5DB", "#475569")
+TABLE_HEADER_BG = ("#F3F4F6", "#0F172A")
+SELECTED_BG = ("#FFEDD5", "#4A2C1A")
