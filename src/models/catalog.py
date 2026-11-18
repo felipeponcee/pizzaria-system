@@ -47,6 +47,7 @@ class Flavor(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), unique=True)
+    allows_half: Mapped[bool] = mapped_column(default=True, server_default="1")
     description: Mapped[str | None] = mapped_column(String(300))
     active: Mapped[bool] = mapped_column(default=True, server_default="1")
 

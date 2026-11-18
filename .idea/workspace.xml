@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="6dc3f219-d15a-4cf1-8677-b0e7348a704a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/theme.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/theme.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/catalog.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/catalog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schemas/catalog.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/schemas/catalog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/base_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/base_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/catalog_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/catalog_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/components/buttons.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/components/buttons.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/components/data_table.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/components/data_table.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/components/form_dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/components/form_dialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/views/catalog_tab.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/views/catalog_tab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/views/catalog_tabs.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/views/catalog_tabs.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/views/products_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/views/products_view.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -28,14 +28,11 @@ class DataTable(ctk.CTkFrame):
         self._rows: dict[int, ctk.CTkFrame] = {}
         self._selected_id: int | None = None
 
-        header = ctk.CTkFrame(self, fg_color=theme.TABLE_HEADER_BG, corner_radius=8)
-        header.pack(fill="x", padx=(0, 20))
-        self._configure_columns(header)
-        for index, (title, _width) in enumerate(columns):
-            ctk.CTkLabel(
-                header, text=title, anchor="w", font=theme.font(13, "bold"),
-                text_color=theme.TEXT_MUTED,
-            ).grid(row=0, column=index, sticky="ew", padx=theme.PAD_M, pady=theme.PAD_S)
+        # Espaço fixo no topo para o cabeçalho (que é recriado quando as colunas mudam)
+        self._header_holder = ctk.CTkFrame(self, fg_color="transparent")
+        self._header_holder.pack(fill="x", padx=(0, 20))
+        self._header: ctk.CTkFrame | None = None
+        self._build_header()
 
         self._body = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self._body.pack(fill="both", expand=True, pady=(theme.PAD_S, 0))
@@ -48,9 +45,30 @@ class DataTable(ctk.CTkFrame):
     def selected_id(self) -> int | None:
         return self._selected_id
 
+    def _build_header(self) -> None:
+        if self._header is not None:
+            self._header.destroy()
+        header = ctk.CTkFrame(
+            self._header_holder, fg_color=theme.TABLE_HEADER_BG, corner_radius=8
+        )
+        header.pack(fill="x")
+        self._configure_columns(header)
+        for index, (title, _width) in enumerate(self._columns):
+            ctk.CTkLabel(
+                header, text=title, anchor="w", font=theme.font(13, "bold"),
+                text_color=theme.TEXT_MUTED,
+            ).grid(row=0, column=index, sticky="ew", padx=theme.PAD_M, pady=theme.PAD_S)
+        self._header = header
+
     def _configure_columns(self, frame: ctk.CTkFrame) -> None:
         for index, (_title, width) in enumerate(self._columns):
             frame.grid_columnconfigure(index, weight=width, minsize=width)
+
+    def set_columns(self, columns: list[tuple[str, int]]) -> None:
+        """Troca as colunas (ex.: quando um tamanho é criado). Limpa as linhas."""
+        self._columns = columns
+        self._build_header()
+        self.set_rows([])
 
     def set_rows(self, rows: Sequence[TableRow]) -> None:
         previous = self._selected_id

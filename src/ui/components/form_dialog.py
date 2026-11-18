@@ -115,10 +115,10 @@ class FormDialog(ctk.CTkToplevel):
         except AppError as exc:
             self._error.configure(text=str(exc))
             return
-        except Exception:
+        except Exception as exc:
             logger.exception("Erro inesperado ao salvar o formulário")
             self._error.configure(
-                text="Erro inesperado ao salvar. Consulte o arquivo de log."
+                text=f"Erro inesperado ({type(exc).__name__}). Consulte o arquivo de log."
             )
             return
         self.destroy()

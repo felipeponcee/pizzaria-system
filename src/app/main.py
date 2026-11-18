@@ -6,7 +6,7 @@ import customtkinter as ctk
 
 from src.core.database import init_db, session_scope
 from src.core.logging_config import setup_logging
-from src.services.catalog_service import ensure_default_categories
+from src.services.catalog_service import ensure_default_categories, ensure_default_sizes
 from src.ui.windows.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
@@ -19,6 +19,7 @@ def main() -> None:
         init_db()
         with session_scope() as session:
             ensure_default_categories(session)
+            ensure_default_sizes(session)
     except Exception:
         logger.exception("Falha ao inicializar o banco de dados")
         messagebox.showerror(

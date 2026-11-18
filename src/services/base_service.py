@@ -52,10 +52,35 @@ class CatalogService(Generic[T]):
         self.session.flush()
         return entity
 
+    def delete(self, entity_id: int) -> None:
+        """Exclui definitivamente. Itens já usados em pedidos só podem ser desativados."""
+        entity = self.get(entity_id)
+        if self._is_used(entity_id):
+            raise BusinessRuleError(
+                f"'{entity.name}' já foi usado em pedidos e não pode ser excluído. "
+                "Desative-o para que deixe de aparecer em novos pedidos."
+            )
+        self.session.delete(entity)
+        self.session.flush()
+        logger.info("%s excluído: id=%s", self.repo.model.__name__, entity_id)
+
     # Ganchos que os serviços específicos podem sobrescrever
+    def _is_used(self, entity_id: int) -> bool:
+        """True se o item já aparece em algum pedido (então não pode ser excluído)."""
+        return False
+
+    def _exists(self, stmt) -> bool:
+        return self.session.scalars(stmt.limit(1)).first() is not None
+
     def _check(self, dto: Schema, ignore_id: int | None = None) -> None:
-        if self.repo.find_by_name(dto.name, ignore_id):
-            raise BusinessRuleError(f"Já existe '{dto.name}' cadastrado.")
+        existing = self.repo.find_by_name(dto.name, ignore_id)
+        if existing is not None:
+            hint = (
+                "Selecione o cadastro na lista e use Editar."
+                if getattr(existing, "active", True)
+                else "Esse cadastro está inativo: ligue 'Mostrar inativos' e use Ativar."
+            )
+            raise BusinessRuleError(f"Já existe '{existing.name}' cadastrado. {hint}")
 
     def _build(self, dto: Schema) -> T:
         return self.repo.model(**dto.model_dump())

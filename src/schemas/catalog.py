@@ -34,6 +34,7 @@ class SizeIn(Schema):
 class FlavorIn(Schema):
     name: str
     description: str | None = None
+    allows_half: bool = True
     prices: dict[int, int]  # id do tamanho -> preço em centavos
 
     @field_validator("name")

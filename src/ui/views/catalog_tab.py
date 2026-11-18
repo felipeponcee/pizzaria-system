@@ -10,7 +10,7 @@ from src.core.database import session_scope
 from src.core.exceptions import AppError
 from src.services.base_service import CatalogService
 from src.ui import theme
-from src.ui.components.buttons import primary_button, secondary_button
+from src.ui.components.buttons import danger_button, primary_button, secondary_button
 from src.ui.components.data_table import DataTable, TableRow
 from src.ui.components.form_dialog import FormDialog
 from src.ui.components.form_fields import Field
@@ -26,6 +26,8 @@ class CatalogTab(ctk.CTkFrame):
     """Cada aba concreta define colunas, formulário e como ler/gravar."""
 
     singular = "item"
+    new_word = "Novo"  # use "Nova" para nomes femininos
+    this_word = "este"  # use "esta" para nomes femininos
     columns: list[tuple[str, int]] = []
     service_class: type[CatalogService]
 
@@ -33,11 +35,11 @@ class CatalogTab(ctk.CTkFrame):
         super().__init__(master, fg_color="transparent")
         self._all_rows: list[TableRow] = []
 
-        toolbar = ctk.CTkFrame(self, fg_color="transparent")
+        toolbar = self._toolbar = ctk.CTkFrame(self, fg_color="transparent")
         toolbar.pack(fill="x", pady=(0, theme.PAD_M))
 
         self._search = ctk.CTkEntry(
-            toolbar, placeholder_text="Pesquisar...", width=260, height=36,
+            toolbar, placeholder_text="Pesquisar...", width=200, height=36,
             font=theme.font(14),
         )
         self._search.pack(side="left")
@@ -49,11 +51,13 @@ class CatalogTab(ctk.CTkFrame):
         )
         self._inactive_switch.pack(side="left", padx=theme.PAD_L)
 
+        self._delete_button = danger_button(toolbar, "Excluir", self._delete, width=90)
+        self._delete_button.pack(side="right")
         self._toggle_button = secondary_button(toolbar, "Desativar", self._toggle_active)
-        self._toggle_button.pack(side="right")
+        self._toggle_button.pack(side="right", padx=theme.PAD_S)
         self._edit_button = secondary_button(toolbar, "Editar", self._edit, width=90)
         self._edit_button.pack(side="right", padx=theme.PAD_S)
-        primary_button(toolbar, f"Novo {self.singular}", self._new).pack(side="right")
+        primary_button(toolbar, f"{self.new_word} {self.singular}", self._new).pack(side="right")
 
         self._table = DataTable(
             self, self.columns, on_select=self._on_select,
@@ -105,6 +109,7 @@ class CatalogTab(ctk.CTkFrame):
         state = "normal" if row_id is not None else "disabled"
         self._edit_button.configure(state=state)
         self._toggle_button.configure(state=state)
+        self._delete_button.configure(state=state)
         row = self._find_row(row_id)
         if row is not None:
             self._toggle_button.configure(text="Desativar" if row.active else "Ativar")
@@ -124,7 +129,7 @@ class CatalogTab(ctk.CTkFrame):
             logger.exception("Falha ao abrir o formulário")
             messagebox.showerror("Erro", "Não foi possível abrir o formulário.")
             return
-        self._open_form(f"Novo {self.singular}", fields, self.default_values(), None)
+        self._open_form(f"{self.new_word} {self.singular}", fields, self.default_values(), None)
 
     def _edit(self) -> None:
         entity_id = self._table.selected_id
@@ -160,6 +165,45 @@ class CatalogTab(ctk.CTkFrame):
                 service.create(**data)
             else:
                 service.update(entity_id, **data)
+        self._refresh_safely()
+
+    def _refresh_safely(self) -> None:
+        """Atualiza a tabela após salvar. Um erro aqui vai só para o log, pois o cadastro já foi gravado."""
+        try:
+            self.refresh()
+        except Exception:
+            logger.exception("Falha ao atualizar a tabela após salvar")
+
+    def delete_warning(self) -> str:
+        """Aviso extra mostrado na confirmação de exclusão (opcional)."""
+        return ""
+
+    def _delete(self) -> None:
+        row = self._find_row(self._table.selected_id)
+        if row is None:
+            return
+        message = (
+            f"Excluir {self.singular} '{row.values[0]}'?\n\n"
+            "Esta ação não pode ser desfeita."
+        )
+        warning = self.delete_warning()
+        if warning:
+            message += f"\n\n{warning}"
+        confirmed = messagebox.askyesno(
+            "Confirmar exclusão", message, icon="warning", parent=self.winfo_toplevel()
+        )
+        if not confirmed:
+            return
+        try:
+            with session_scope() as session:
+                self.service_class(session).delete(row.id)
+        except AppError as exc:
+            messagebox.showwarning(
+                "Não foi possível excluir", str(exc), parent=self.winfo_toplevel()
+            )
+        except Exception:
+            logger.exception("Falha ao excluir %s", self.singular)
+            messagebox.showerror("Erro", "Não foi possível excluir. Consulte o arquivo de log.")
         self.refresh()
 
     def _toggle_active(self) -> None:
@@ -170,7 +214,7 @@ class CatalogTab(ctk.CTkFrame):
         verb = "ativar" if new_active else "desativar"
         confirmed = messagebox.askyesno(
             "Confirmar",
-            f"Deseja {verb} este {self.singular}?\n\n{row.values[0]}",
+            f"Deseja {verb} {self.this_word} {self.singular}?\n\n{row.values[0]}",
             parent=self.winfo_toplevel(),
         )
         if not confirmed:

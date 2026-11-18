@@ -1,14 +1,14 @@
-﻿"""Tela Produtos: abas de Tamanhos, Sabores, Produtos e Adicionais."""
+﻿"""Tela Produtos: abas de Pizzas, Produtos e Adicionais."""
 import customtkinter as ctk
 
 from src.ui import theme
 from src.ui.views.base_view import BaseView
 from src.ui.views.catalog_tab import CatalogTab
-from src.ui.views.catalog_tabs import AdditionalsTab, FlavorsTab, ProductsTab, SizesTab
+from src.ui.views.catalog_tabs import AdditionalsTab, ProductsTab
+from src.ui.views.pizza_tabs import PizzasTab
 
 TABS: list[tuple[str, type[CatalogTab]]] = [
-    ("Tamanhos", SizesTab),
-    ("Sabores", FlavorsTab),
+    ("Pizzas", PizzasTab),
     ("Produtos", ProductsTab),
     ("Adicionais", AdditionalsTab),
 ]
@@ -16,7 +16,7 @@ TABS: list[tuple[str, type[CatalogTab]]] = [
 
 class ProductsView(BaseView):
     title = "Produtos"
-    subtitle = "Cardápio, sabores, tamanhos e adicionais"
+    subtitle = "Cardápio: pizzas, bebidas e adicionais"
 
     def build(self, parent: ctk.CTkFrame) -> None:
         self._tabs = ctk.CTkTabview(
